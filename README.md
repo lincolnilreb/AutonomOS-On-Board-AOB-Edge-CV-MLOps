@@ -13,14 +13,6 @@ This project delivers a production-oriented **CVOps (MLOps)** pipeline around **
 
 ## Planned CVOps (MLOps) Workflow
 
-Roboflow Dataset Version] ──▶ pull (COCO) ──▶ train (EC2 GPU) ──▶ eval (COCO mAP)
-                                          │                      │
-                                          └────── package (ONNX/TensorRT) ───▶ deploy
-                                                                                 │
-                                              monitor (latency/quality/drift) ───┘
-                                                              │
-                                                     active learning ──▶ relabel/version
-
 Stages:
 1. **DataOps & Versioning** — Curate/label in Roboflow, freeze a **Version** (train/val/test, preprocessing, augs); run schema/label QA.
 2. **Training (EC2 GPU)** — Deterministic configs (AdamW, warmup+cosine, AMP, early-stopping on mAP@50–95); experiment tracking.
@@ -44,20 +36,12 @@ Stages:
 
 
 ## Tech Stack (Expected Tools & Choices)
-Modeling & Training: PyTorch, RF-DETR, COCO format, AMP (mixed precision), AdamW + cosine LR  
-DataOps: Roboflow (labeling/versioning), Great Expectations (schema/label QA)  
-Experiment Tracking & Registry: Weights & Biases, MLflow (runs, metrics, artifacts, model registry)  
-Orchestration / CI: GitHub Actions, Airflow, Prefect, Terraform (infra)  
-Serving (Cloud): FastAPI, ONNX Runtime, TensorRT, Docker, Helm, Kubernetes  
-Edge: NVIDIA TensorRT (FP16/INT8), Jetson launcher, watchdog, OTA updates  
-Observability: Prometheus (metrics), Grafana (dashboards), structured JSON logs  
-Cloud Infra: AWS EC2 (GPU) for training, ECR/EKS optional for serving  
-Future Enhancements: Triton Inference Server, INT8 calibration pipeline, EvidentlyAI drift monitoring, model cards & registry hardening
-
-
-## Impact
-
-- **Engineering Efficiency** — One-command, reproducible training and evaluation on EC2; automated gates prevent low-quality releases; portable artifacts across environments.
-- **Operational Reliability** — Real-time edge inference with predictable latency; safe canary/shadow rollouts and rapid rollback; clear runbooks and dashboards.
-- **Business Value** — Faster iteration cycles and measurable quality improvements via active learning; SLOs (mAP & latency) align model performance with product goals.
+- Modeling & Training: PyTorch, RF-DETR, COCO format, AMP (mixed precision), AdamW + cosine LR  
+- DataOps: Roboflow (labeling/versioning)
+- Experiment Tracking & Registry: Weights & Biases, MLflow (runs, metrics, artifacts, model registry)  
+- Orchestration / CI: GitHub Actions, Airflow, Terraform (infra)  
+- Serving (Cloud): FastAPI, ONNX Runtime, TensorRT, Docker, Helm 
+- Edge: NVIDIA TensorRT (FP16/INT8), Jetson launcher, watchdog, OTA updates  
+- Observability: Prometheus (metrics), Grafana (dashboards), structured JSON logs  
+- Cloud Infra: AWS EC2 (GPU) for training, ECR/EKS optional for serving  
 
